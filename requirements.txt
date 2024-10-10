@@ -2,6 +2,9 @@ pipenv==2024.1.0
 Django==4.2.11
 phonenumbers==8.13.47
 django-phonenumber-field==8.0.0
+djangorestframework
+markdown
+django-filter
 
 # [dev-packages]
 isort
