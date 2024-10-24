@@ -7,7 +7,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     class Meta:
         abstract = True
@@ -15,20 +15,26 @@ class BaseModel(models.Model):
 
 class Author(BaseModel):
     first_name = models.CharField(max_length=128, null=False, blank=True)
-    middele_name = models.CharField(max_length=128, null=True, blank=True)
+    middle_name = models.CharField(max_length=128, null=True, blank=True)
     last_name = models.CharField(max_length=128, null=False, blank=True)
     email = models.EmailField(null=True, blank=True)
     website = models.URLField(null=True, blank=True)
     phone_number = PhoneNumberField(null=True, blank=True)
-    birthday = models.DateField(null=True, blank=True)
+    birthdate = models.DateField(null=True, blank=True)
     language = models.CharField(max_length=128, null=False, blank=True)
     is_translator = models.BooleanField(default=False, null=False, blank=True)
+
+    def __str__(self) -> str:
+        return f"{self.first_name} {self.last_name}"
 
 
 class Publication(BaseModel):
     name = models.CharField(max_length=128, null=False, blank=False)
     phone_number = PhoneNumberField(null=True, blank=True)
     address = models.CharField(max_length=128, null=False, blank=False)
+
+    def __str__(self):
+        return self.name
 
 
 class Book(BaseModel):
@@ -38,8 +44,14 @@ class Book(BaseModel):
         default=2020,
         validators=[MaxValueValidator(4000), MinValueValidator(500)],
     )
-    translator = models.ForeignKey(
-        Author, on_delete=models.CASCADE, related_name="book_translator"
+    translator = (
+        models.ForeignKey(
+            Author,
+            on_delete=models.CASCADE,
+            related_name="book_translator",
+            null=True,
+            blank=True,
+        ),
     )
     author = models.ForeignKey(
         Author, on_delete=models.CASCADE, related_name="book_author"
@@ -49,3 +61,6 @@ class Book(BaseModel):
     isbn = models.IntegerField(null=False, blank=True)
     publication = models.ForeignKey(Publication, on_delete=models.CASCADE)
     amount = models.IntegerField(null=False, default=1)
+
+    def __str__(self):
+        return f"{self.title} | {self.author} | {self.publication} | {self.amount}"
