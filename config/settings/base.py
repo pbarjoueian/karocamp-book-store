@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 
+from .env import env
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,12 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-(_3d$8&t-87%fz#o7+@)7=v$03-ib4^rrjcml^3hio&z@7^9qs"
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = int(env("DEBUG"))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(",")
 
 
 # Application definition
@@ -102,22 +104,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
-    ],
-    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-}
-
-SPECTACULAR_SETTINGS = {
-    "TITLE": "Karocamp Bookstore API",
-    "DESCRIPTION": "Bookstore Backend",
-    "VERSION": "1.0.0",
-    "SERVE_INCLUDE_SCHEMA": True,
-    # OTHER SETTINGS
-}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -140,3 +126,5 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+from .sub_settings import *  # noqa
