@@ -1,13 +1,14 @@
-from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+
+from account.models import UserData
 
 
 class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    created_by = models.ForeignKey(UserData, on_delete=models.CASCADE, null=True)
 
     class Meta:
         abstract = True

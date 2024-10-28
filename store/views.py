@@ -2,7 +2,7 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated  # NOQA
 from rest_framework.viewsets import ModelViewSet
 
 from .models import Author, Book, Publication
-from .serializer import (
+from .serializers import (
     AuthorSerializer,
     BookCreateSerializer,
     BookReadSerializer,
